@@ -16,9 +16,6 @@
     --red: #f85149;
     --yellow: #d2991d;
     --user-bg: #1f6feb22;
-    --assistant-bg: #161b22;
-    --tool-bg: #0d1117;
-    --tool-border: #21262d;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
   }
@@ -34,7 +31,6 @@
     overflow: hidden;
   }
 
-  /* Header */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -44,18 +40,23 @@
     justify-content: space-between;
     flex-shrink: 0;
   }
-  header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+  header h1 { font-size: 16px; font-weight: 600; }
   header h1 span { color: var(--accent); }
-  header .status {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; color: var(--text-muted);
+  header .actions { display: flex; gap: 10px; align-items: center; }
+  header .actions button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
   }
-  header .status .dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-  }
+  header .actions button:hover { border-color: var(--accent); color: var(--accent); }
+  header .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  header .status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
   header .status .dot.offline { background: var(--red); }
 
-  /* Chat area */
   #chat {
     flex: 1;
     overflow-y: auto;
@@ -64,8 +65,8 @@
     flex-direction: column;
     gap: 12px;
   }
+  #chat.hidden { display: none; }
 
-  /* Messages */
   .msg {
     max-width: 800px;
     width: 100%;
@@ -80,97 +81,21 @@
     border-radius: 12px;
     padding: 10px 14px;
   }
-  .msg.assistant .content {
-    background: transparent;
-    padding: 10px 0;
-  }
-
-  .msg .role {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-    color: var(--text-muted);
-  }
+  .msg.assistant .content { background: transparent; padding: 10px 0; }
+  .msg .role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--text-muted); }
   .msg.user .role { color: var(--accent); }
   .msg.assistant .role { color: var(--green); }
-
-  .msg .text {
-    font-size: 14px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  .msg.assistant .text.streaming::after {
-    content: "▊";
-    animation: blink 0.8s infinite;
-    color: var(--accent);
-  }
+  .msg .text { font-size: 14px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+  .msg.assistant .text.streaming::after { content: "▊"; animation: blink 0.8s infinite; color: var(--accent); }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* Tool call block */
-  .tool-call {
-    margin: 8px 0;
-    border: 1px solid var(--tool-border);
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--tool-bg);
-  }
-  .tool-call .tool-header {
-    padding: 8px 12px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--yellow);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    user-select: none;
-  }
-  .tool-call .tool-header:hover { background: rgba(255,255,255,0.03); }
-  .tool-call .tool-header .icon { font-size: 14px; }
-  .tool-call .tool-header .name { font-weight: 600; }
-  .tool-call .tool-header .status {
-    margin-left: auto;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .tool-call .tool-header .status.running { background: rgba(210,153,29,0.15); color: var(--yellow); }
-  .tool-call .tool-header .status.done { background: rgba(63,185,80,0.15); color: var(--green); }
-  .tool-call .tool-header .status.error { background: rgba(248,81,73,0.15); color: var(--red); }
-
-  .tool-call .tool-detail {
-    padding: 0 12px 12px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    background: rgba(0,0,0,0.2);
-    white-space: pre-wrap;
-    border-top: 1px solid var(--tool-border);
-  }
-  .tool-call.expanded .tool-detail { display: block; }
-
-  .tool-call .tool-input {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    padding: 8px 12px;
-    border-top: 1px solid var(--tool-border);
-    background: rgba(0,0,0,0.15);
-  }
-
-  /* Input area */
   footer {
     background: var(--surface);
     border-top: 1px solid var(--border);
     padding: 12px 20px;
     flex-shrink: 0;
   }
+  footer.hidden { display: none; }
   #input-area {
     max-width: 800px;
     margin: 0 auto;
@@ -195,7 +120,6 @@
   }
   #input-area textarea:focus { border-color: var(--accent); }
   #input-area textarea::placeholder { color: var(--text-muted); }
-
   #input-area button {
     background: var(--accent);
     color: #fff;
@@ -211,23 +135,72 @@
   #input-area button:hover { opacity: 0.85; }
   #input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .typing-indicator {
-    color: var(--text-muted);
+  /* ── Login screen ── */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: var(--bg);
+  }
+  #login-screen.hidden { display: none; }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 440px;
+    max-width: 90vw;
+  }
+  .login-card h2 { font-size: 22px; margin-bottom: 4px; }
+  .login-card .subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 28px; }
+  .login-card label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; font-weight: 500; }
+  .login-card select,
+  .login-card input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 16px;
+    font-family: var(--font);
+    outline: none;
+  }
+  .login-card input:focus,
+  .login-card select:focus { border-color: var(--accent); }
+  .login-card .error { color: var(--red); font-size: 12px; margin-bottom: 12px; display: none; }
+  .login-card button {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .login-card button:hover { opacity: 0.85; }
+  .login-card button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .login-card .saved {
     font-size: 12px;
-    padding: 4px 0;
+    color: var(--green);
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    gap: 6px;
   }
-  .typing-indicator::after {
-    content: "";
-    animation: dots 1.2s steps(4, end) infinite;
-  }
-  @keyframes dots {
-    0% { content: ""; }
-    25% { content: "."; }
-    50% { content: ".."; }
-    75% { content: "..."; }
+  .login-card .saved .clear-saved {
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: auto;
   }
 
-  /* Welcome */
   .welcome {
     text-align: center;
     padding: 60px 20px;
@@ -235,10 +208,7 @@
   }
   .welcome h2 { font-size: 20px; color: var(--text); margin-bottom: 8px; }
   .welcome p { font-size: 14px; line-height: 1.6; }
-  .welcome .examples {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: center; margin-top: 20px;
-  }
+  .welcome .examples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
   .welcome .examples button {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -249,23 +219,91 @@
     cursor: pointer;
     transition: all 0.15s;
   }
-  .welcome .examples button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .welcome .examples button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Tool calls */
+  .tool-call {
+    margin: 8px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
   }
+  .tool-call .tool-header {
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--yellow);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  .tool-call .tool-header:hover { background: rgba(255,255,255,0.03); }
+  .tool-call .tool-header .icon { font-size: 14px; }
+  .tool-call .tool-header .name { font-weight: 600; }
+  .tool-call .tool-header .status { margin-left: auto; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+  .tool-call .tool-header .status.running { background: rgba(210,153,29,0.15); color: var(--yellow); }
+  .tool-call .tool-header .status.done { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tool-call .tool-header .status.error { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tool-call .tool-detail {
+    padding: 8px 12px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: none;
+    white-space: pre-wrap;
+    border-top: 1px solid var(--border);
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .tool-call.expanded .tool-detail { display: block; }
 </style>
 </head>
 <body>
 
-<header>
+<!-- Login Screen -->
+<div id="login-screen">
+  <div class="login-card">
+    <h2>SII Agent</h2>
+    <p class="subtitle">Securities Industry Operations &middot; Financial Advisory Demo</p>
+
+    <div class="saved" id="saved-indicator">
+      <span>&#10003; Credentials loaded from browser storage</span>
+      <span class="clear-saved" onclick="clearSaved()">Clear</span>
+    </div>
+
+    <label>Provider</label>
+    <select id="provider-select">
+      <option value="anthropic">Anthropic (Claude)</option>
+      <option value="openai">OpenAI (GPT-4o)</option>
+      <option value="google">Google (Gemini)</option>
+      <option value="deepseek">DeepSeek</option>
+      <option value="groq">Groq</option>
+    </select>
+
+    <label>API Key</label>
+    <input id="api-key-input" type="password" placeholder="sk-ant-... or sk-...">
+    <p class="error" id="login-error"></p>
+    <button id="login-btn" onclick="login()">Connect</button>
+  </div>
+</div>
+
+<!-- Main App (hidden until logged in) -->
+<header class="hidden" id="main-header">
   <h1><span>▸</span> SII Agent — Securities Industry Operations</h1>
+  <div class="actions">
+    <button onclick="newSession()">New Session</button>
+    <button onclick="logout()">Disconnect</button>
+  </div>
   <div class="status">
     <div class="dot" id="status-dot"></div>
     <span id="status-text">Connecting...</span>
   </div>
 </header>
 
-<div id="chat">
+<div id="chat" class="hidden">
   <div class="welcome" id="welcome">
     <h2>SII Financial Advisory Agent</h2>
     <p>I can look up clients, review portfolios, place trades, check CRM history,<br>and manage financial plans across 7 simulated brokerage subsystems.</p>
@@ -280,7 +318,7 @@
   </div>
 </div>
 
-<footer>
+<footer id="main-footer" class="hidden">
   <div id="input-area">
     <textarea id="input" rows="1" placeholder="Ask the SII agent anything..."
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
@@ -289,32 +327,77 @@
 </footer>
 
 <script>
+const LS_KEY = 'sii_agent_auth';
+
 let ws;
 let connected = false;
-let currentMessageId = null;
+let sessionReady = false;
 let currentTextDiv = null;
-let currentToolDiv = null;
+let currentMessageId = null;
 let processing = false;
 
-function setStatus(online, text) {
-  document.getElementById('status-dot').className = 'dot' + (online ? '' : ' offline');
-  document.getElementById('status-text').textContent = text;
+// ── Login flow ────────────────────────────────────────────────────────────
+
+function loadSaved() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (!saved) return false;
+  try {
+    const creds = JSON.parse(saved);
+    document.getElementById('provider-select').value = creds.provider || 'anthropic';
+    document.getElementById('api-key-input').value = creds.apiKey || '';
+    document.getElementById('saved-indicator').style.display = 'flex';
+    return true;
+  } catch (e) { return false; }
 }
 
-function connect() {
+function saveCreds(provider, apiKey) {
+  localStorage.setItem(LS_KEY, JSON.stringify({ provider, apiKey }));
+}
+
+function clearSaved() {
+  localStorage.removeItem(LS_KEY);
+  document.getElementById('saved-indicator').style.display = 'none';
+  document.getElementById('api-key-input').value = '';
+}
+
+function login() {
+  const provider = document.getElementById('provider-select').value;
+  const apiKey = document.getElementById('api-key-input').value.trim();
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  err.style.display = 'none';
+
+  if (!apiKey) {
+    err.textContent = 'Please enter your API key.';
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Connecting...';
+
+  // Connect WebSocket first
+  connect(provider, apiKey);
+}
+
+function connect(provider, apiKey) {
+  if (ws) { ws.close(); ws = null; }
+
   const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
   ws = new WebSocket(`${protocol}//${location.host}`);
 
   ws.onopen = () => {
     connected = true;
-    setStatus(true, 'Connected');
-    ws.send(JSON.stringify({ type: 'init' }));
+    // Send login message with credentials
+    ws.send(JSON.stringify({ type: 'login', provider, apiKey }));
   };
 
   ws.onclose = () => {
     connected = false;
-    setStatus(false, 'Disconnected');
-    setTimeout(connect, 2000);
+    sessionReady = false;
+    updateStatusDot(false);
+    updateSendButton();
   };
 
   ws.onmessage = (e) => {
@@ -322,18 +405,40 @@ function connect() {
     handleEvent(event);
   };
 
-  ws.onerror = () => setStatus(false, 'Error');
+  ws.onerror = () => {
+    const button = document.getElementById('login-btn');
+    button.disabled = false;
+    button.textContent = 'Connect';
+    const err = document.getElementById('login-error');
+    err.textContent = 'Could not connect to server. Is it running?';
+    err.style.display = 'block';
+  };
 }
+
+// ── Event handling ────────────────────────────────────────────────────────
 
 function handleEvent(event) {
   switch (event.type) {
     case 'ready':
-      setStatus(true, 'Ready');
+      // Session initialized successfully — show main UI
+      const prov = document.getElementById('provider-select').value;
+      const key = document.getElementById('api-key-input').value;
+      saveCreds(prov, key);
+
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('main-header').classList.remove('hidden');
+      document.getElementById('chat').classList.remove('hidden');
+      document.getElementById('main-footer').classList.remove('hidden');
+
+      sessionReady = true;
+      updateStatusDot(true);
+      updateSendButton();
+      updateStatusText('Ready');
+      document.getElementById('send-btn').disabled = false;
       break;
 
     case 'message_start':
       if (event.role === 'assistant') {
-        // New assistant message — create message block
         const chat = document.getElementById('chat');
         const div = document.createElement('div');
         div.className = 'msg assistant';
@@ -352,8 +457,6 @@ function handleEvent(event) {
         currentMessageId = event.messageId;
         document.getElementById('welcome')?.remove();
         scrollDown();
-      } else if (event.role === 'user') {
-        // User message already shown by prompt handler
       }
       break;
 
@@ -367,26 +470,11 @@ function handleEvent(event) {
     case 'message_end':
       if (currentTextDiv && event.role === 'assistant') {
         currentTextDiv.classList.remove('streaming');
-
-        // Add tool calls
         if (event.toolCalls) {
           for (const tc of event.toolCalls) {
-            addToolCall(tc, null, 'done');
+            addToolBlock(tc);
           }
         }
-        if (event.toolResults) {
-          for (const tr of event.toolResults) {
-            // Tool results update the existing tool call block
-          }
-        }
-
-        // Add tool calls that came directly
-        if (event.toolCalls) {
-          for (const tc of event.toolCalls) {
-            addToolCall(tc, null, 'done');
-          }
-        }
-
         currentTextDiv = null;
         currentMessageId = null;
         scrollDown();
@@ -397,7 +485,7 @@ function handleEvent(event) {
       processing = false;
       updateSendButton();
       if (event.error) {
-        addSystemMessage('Error: ' + event.error);
+        addSystemMsg('Error: ' + event.error);
       }
       break;
 
@@ -407,71 +495,76 @@ function handleEvent(event) {
       break;
 
     case 'error':
-      addSystemMessage('Error: ' + event.error);
+      addSystemMsg('Error: ' + event.error);
       processing = false;
       updateSendButton();
+      // If this is a login error, show login screen again
+      if (!sessionReady) {
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('main-header').classList.add('hidden');
+        document.getElementById('chat').classList.add('hidden');
+        document.getElementById('main-footer').classList.add('hidden');
+        const btn = document.getElementById('login-btn');
+        btn.disabled = false;
+        btn.textContent = 'Connect';
+        const err = document.getElementById('login-error');
+        err.textContent = event.error;
+        err.style.display = 'block';
+      }
       break;
   }
 }
 
-function addToolCall(toolCall) {
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function addToolBlock(tc) {
   const chat = document.getElementById('chat');
   const div = document.createElement('div');
   div.className = 'msg assistant';
   div.innerHTML = `
     <div class="role">TOOL</div>
-    <div class="tool-call expanded">
+    <div class="tool-call">
       <div class="tool-header" onclick="this.parentElement.classList.toggle('expanded')">
         <span class="icon">▶</span>
-        <span class="name">${escapeHtml(toolCall.name)}</span>
+        <span class="name">${esc(tc.name)}</span>
         <span class="status running">running</span>
       </div>
-      <div class="tool-input">${formatToolInput(toolCall.input)}</div>
-      <div class="tool-detail"></div>
+      <div class="tool-detail">${tc.input?.command || JSON.stringify(tc.input, null, 2) || ''}</div>
     </div>
   `;
   chat.appendChild(div);
   scrollDown();
-  return div;
 }
 
-function formatToolInput(input) {
-  if (!input) return '';
-  const lines = [];
-  for (const [k, v] of Object.entries(input)) {
-    lines.push(`  ${k}: ${v}`);
-  }
-  return lines.join('\n');
-}
-
-function addSystemMessage(text) {
+function addSystemMsg(text) {
   const chat = document.getElementById('chat');
   const div = document.createElement('div');
   div.className = 'msg assistant';
-  div.innerHTML = `<div class="role">SYSTEM</div><div class="text" style="color:var(--text-muted);font-size:12px;">${escapeHtml(text)}</div>`;
+  div.innerHTML = `<div class="role">SYSTEM</div><div class="text" style="color:var(--text-muted);font-size:12px;">${esc(text)}</div>`;
   chat.appendChild(div);
-  scrollDown();
 }
 
-function addUserMessage(text) {
+function addUserMsg(text) {
   const chat = document.getElementById('chat');
   const div = document.createElement('div');
   div.className = 'msg user';
-  div.innerHTML = `<div class="role">You</div><div class="text">${escapeHtml(text)}</div>`;
+  div.innerHTML = `<div class="role">You</div><div class="text">${esc(text)}</div>`;
   chat.appendChild(div);
   document.getElementById('welcome')?.remove();
   scrollDown();
 }
 
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
 function send() {
-  if (!connected || processing) return;
+  if (!sessionReady || processing) return;
   const input = document.getElementById('input');
   const text = input.value.trim();
   if (!text) return;
 
   processing = true;
   updateSendButton();
-  addUserMessage(text);
+  addUserMsg(text);
   input.value = '';
   input.style.height = 'auto';
 
@@ -479,23 +572,25 @@ function send() {
 }
 
 function sendQuick(text) {
-  if (!connected || processing) return;
+  if (!sessionReady || processing) return;
   processing = true;
   updateSendButton();
-  addUserMessage(text);
+  addUserMsg(text);
   ws.send(JSON.stringify({ type: 'prompt', text }));
 }
 
 function updateSendButton() {
   const btn = document.getElementById('send-btn');
-  btn.disabled = processing || !connected;
+  btn.disabled = processing || !sessionReady;
   btn.textContent = processing ? '...' : 'Send';
 }
 
-function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+function updateStatusDot(ok) {
+  document.getElementById('status-dot').className = 'dot' + (ok ? '' : ' offline');
+}
+
+function updateStatusText(t) {
+  document.getElementById('status-text').textContent = t;
 }
 
 function scrollDown() {
@@ -503,14 +598,51 @@ function scrollDown() {
   requestAnimationFrame(() => chat.scrollTop = chat.scrollHeight);
 }
 
-// Auto-resize textarea
+function newSession() {
+  if (ws) { ws.close(); ws = null; }
+  document.getElementById('chat').innerHTML = `
+    <div class="welcome" id="welcome">
+      <h2>SII Financial Advisory Agent</h2>
+      <p>I can look up clients, review portfolios, place trades, check CRM history,<br>and manage financial plans across 7 simulated brokerage subsystems.</p>
+      <div class="examples">
+        <button onclick="sendQuick('Who are my latest clients?')">Latest clients</button>
+        <button onclick="sendQuick('Review Robert Chen\'s portfolio')">Portfolio review</button>
+        <button onclick="sendQuick('Show me all pending orders')">Pending orders</button>
+        <button onclick="sendQuick('What plans does Marcus Williams have active?')">Financial plans</button>
+        <button onclick="sendQuick('Place a limit buy for 50 shares of NVDA for client ACC-10009 at $135')">Place trade</button>
+        <button onclick="sendQuick('Add a new client named Alex Rivera, individual account, aggressive growth')">Add client</button>
+      </div>
+    </div>
+  `;
+  const prov = document.getElementById('provider-select').value;
+  const key = document.getElementById('api-key-input').value;
+  sessionReady = false;
+  processing = false;
+  connect(prov, key);
+}
+
+function logout() {
+  if (ws) { ws.close(); ws = null; }
+  sessionReady = false;
+  connected = false;
+  processing = false;
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('main-header').classList.add('hidden');
+  document.getElementById('chat').classList.add('hidden');
+  document.getElementById('main-footer').classList.add('hidden');
+  document.getElementById('chat').innerHTML = '';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'Connect';
+}
+
+// ── Auto-resize textarea ──────────────────────────────────────────────────
 document.getElementById('input').addEventListener('input', function() {
   this.style.height = 'auto';
   this.style.height = Math.min(this.scrollHeight, 120) + 'px';
 });
 
-// Connect on load
-connect();
+// ── Startup ───────────────────────────────────────────────────────────────
+loadSaved();
 </script>
 </body>
 </html>

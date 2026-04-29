@@ -52,7 +52,14 @@ wss.on("connection", (ws) => {
       const msg = JSON.parse(data.toString());
 
       if (msg.type === "init") {
+        // Client just connected — not logged in yet
+        return;
+      }
+
+      if (msg.type === "login") {
+        const { provider, apiKey, model } = msg;
         const authStorage = AuthStorage.create();
+        authStorage.setRuntimeApiKey(provider || "anthropic", apiKey);
         const modelRegistry = ModelRegistry.create(authStorage);
 
         const result = await createAgentSession({
@@ -60,6 +67,7 @@ wss.on("connection", (ws) => {
           authStorage,
           modelRegistry,
           cwd: PROJECT_ROOT,
+          model: model || undefined,
         });
         session = result.session;
 
