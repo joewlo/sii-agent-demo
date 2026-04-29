@@ -1,0 +1,6 @@
+db/sii_agent.db
+web/node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+.env

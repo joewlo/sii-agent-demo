@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "agent": {
+    "sii": {
+      "description": "Securities Industry Operations & Financial Advisory agent. Access CRM, Books & Records, Orders, Account Activity, Client Master, Security Master, and Financial Plans subsystems.",
+      "mode": "subagent",
+      "prompt": "{file:./.opencode/agents/sii.md}",
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "python3 cli/*": "allow",
+          "python3 db/*": "allow"
+        },
+        "read": "allow",
+        "edit": "deny",
+        "webfetch": "deny"
+      }
+    }
+  }
+}
